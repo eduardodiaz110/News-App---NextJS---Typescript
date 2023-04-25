@@ -24,9 +24,10 @@ export const getStaticPaths: GetStaticPaths = async () =>{
 
     return {
         paths,
-        fallback: false,
+        fallback: true,
     }
 }
+
 
 export const getStaticProps: GetStaticProps<CategoryNewsPageProps> = async({params}) =>{
     const category = params?.category?.toString();
@@ -36,7 +37,7 @@ export const getStaticProps: GetStaticProps<CategoryNewsPageProps> = async({para
 
   return {
 
-    props: {newsArticles: newsResponse.articles ?? null},
+    props: {newsArticles: newsResponse.articles},
     revalidate: 5*60,
 
   }
@@ -46,6 +47,11 @@ const CategoryNewsPage = ({newsArticles}: CategoryNewsPageProps) => {
 
     const router = useRouter();
     const categoryName = router.query.category?.toString();
+
+    if (router.isFallback) {
+        return <div>404...</div>
+      }
+    
 
     const title = "Category: " +categoryName;
     return ( 
